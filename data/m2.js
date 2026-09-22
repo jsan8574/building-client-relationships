@@ -1,5 +1,5 @@
 /* =============================================================================
-   data/m2.js — Module 2: Building Client Relationships
+   data/m2.js — Building Client Relationships (course content)
 
    Content restructured from the facilitator deck (25 slides, 20 with notes).
    Wherever the slide and the speaker notes disagreed on depth, the NOTES won:

@@ -122,7 +122,10 @@ hr{border:0;border-top:1px solid var(--line);margin:28px 0}
 
 @media (max-width:640px){
   .tb-meta.hide-sm{display:none}
-  .brand-txt{display:none}          /* mark alone: the flex row must never push the Home button off-screen */
+  /* No brandmark any more, so keep the title but let it truncate — the flex row
+     must never push the Home button off-screen. */
+  .brand-txt span{display:none}
+  .brand-txt b{font-size:.88rem}
   .topbar-in{padding:0 14px;gap:10px}
 }
 
@@ -347,25 +350,44 @@ input.err,textarea.err{border-color:var(--bad);box-shadow:0 0 0 3px var(--bad-bg
 .seq li.wrong{border-color:#E3B4B4;background:var(--bad-bg)}
 .seq li.wrong .pos{background:var(--bad)}
 
-/* ---------- flip cards ---------- */
-.flipgrid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
-.flip{perspective:1200px;background:none;border:0;padding:0;font:inherit;cursor:pointer;text-align:left;min-height:210px}
-.flip-in{position:relative;width:100%;height:100%;min-height:210px;transition:transform .55s cubic-bezier(.3,.8,.3,1);transform-style:preserve-3d}
+/* ---------- flip cards ----------
+   Both faces share grid cell 1/1 rather than being absolutely positioned, so the
+   card sizes itself to its TALLEST face. The old build absolutely-positioned the
+   faces inside a <span> that was still inline, so width/height/min-height never
+   applied and the faces collapsed to the letter badge.                          */
+.flipgrid{display:grid;gap:14px;align-items:stretch;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:560px){ .flipgrid{grid-template-columns:minmax(0,1fr)} }
+.flip{
+  display:block;perspective:1200px;background:none;border:0;padding:0;font:inherit;
+  cursor:pointer;text-align:left;width:100%;
+}
+.flip-in{
+  display:grid;grid-template-columns:1fr;position:relative;height:100%;
+  transition:transform .55s cubic-bezier(.3,.8,.3,1);transform-style:preserve-3d;
+}
 .flip.on .flip-in{transform:rotateY(180deg)}
 .flip-f,.flip-bk{
-  position:absolute;inset:0;border-radius:var(--r-m);padding:17px;display:flex;flex-direction:column;
-  -webkit-backface-visibility:hidden;backface-visibility:hidden;border:1px solid var(--line);box-shadow:var(--sh-1);overflow:auto;
+  grid-area:1/1;border-radius:var(--r-m);padding:18px;display:flex;flex-direction:column;
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;
+  border:1px solid var(--line);box-shadow:var(--sh-1);min-height:210px;
 }
-.flip-f{background:var(--surface);}
+.flip-f{background:var(--surface)}
 .flip-bk{background:var(--blue-90);color:#EAF3F6;transform:rotateY(180deg);border-color:var(--blue-90)}
-.flip-bk p{color:#DCE9EE;font-size:.87rem;line-height:1.52}
+.flip-bk p{color:#DCE9EE;font-size:.88rem;line-height:1.55;margin:0 0 .7em}
+.flip-bk p:last-of-type{margin-bottom:0}
 .flip-bk b{color:#fff}
-.flip .lt{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-weight:700;font-size:1rem;margin-bottom:10px;flex:0 0 auto}
-.flip-f h4{font-size:1.02rem;font-weight:700;margin:0 0 5px}
-.flip-f .sub{font-size:.8rem;color:var(--muted);margin:0}
-.flip .cue{margin-top:auto;padding-top:11px;font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--accent)}
+.flip .lt{
+  width:36px;height:36px;border-radius:11px;display:grid;place-items:center;
+  font-weight:700;font-size:1.05rem;margin-bottom:11px;flex:0 0 auto;
+}
+.flip-f h4{font-size:1.05rem;font-weight:700;margin:0 0 5px}
+.flip-f .sub{font-size:.82rem;color:var(--muted);margin:0;line-height:1.45}
+.flip .cue{
+  margin-top:auto;padding-top:13px;font-size:.7rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--accent);
+}
 .flip-bk .cue{color:var(--blue-40)}
-.flip.seen .flip-f{border-color:var(--green-40)}
+.flip.seen .flip-f{border-color:var(--green-40);box-shadow:0 0 0 1px var(--green-40), var(--sh-1)}
 @media (prefers-reduced-motion:reduce){ .flip-in{transition:none} }
 
 /* ---------- matching with connector lines ---------- */
@@ -586,8 +608,54 @@ table.hunt-t{border-collapse:separate;border-spacing:0;width:100%;min-width:560p
 .cq-detail em{color:var(--faint)}
 @media (max-width:480px){ .cq-cell{min-height:78px;font-size:.82rem;padding:8px} }
 
-/* Expectation gap */
-.dg-gap svg{width:100%;height:auto;display:block;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);padding:8px}
+/* Expectation gap — day-scale timeline */
+.gp{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);padding:18px 20px 14px}
+.gp-row{display:grid;grid-template-columns:176px minmax(0,1fr);gap:16px;align-items:center;padding:9px 0}
+.gp-row + .gp-row{border-top:1px solid var(--line)}
+.gp-lbl b{display:block;font-weight:700;font-size:.93rem;line-height:1.25}
+.gp-lbl span{display:block;font-size:.79rem;color:var(--muted);line-height:1.35;margin-top:1px}
+.gp-track{position:relative;height:36px}
+.gp-rule{position:absolute;left:0;right:0;top:50%;height:2px;background:var(--line);border-radius:2px}
+
+/* scale header */
+.gp-head{padding-bottom:2px}
+.gp-scale{height:26px}
+.gp-tick{
+  position:absolute;top:0;transform:translateX(-50%);font-size:.75rem;font-weight:600;
+  color:var(--faint);font-variant-numeric:tabular-nums;
+}
+.gp-cap-lbl{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+
+/* the gap itself */
+.gp-bar{position:absolute;top:50%;transform:translateY(-50%);height:11px;border-radius:999px;background:repeating-linear-gradient(115deg,rgba(140,48,48,.28) 0 6px,rgba(140,48,48,.11) 6px 12px);border:1px solid rgba(140,48,48,.35)}
+.gp-chip{
+  position:absolute;top:-4px;transform:translateX(-50%);font-size:.68rem;font-weight:700;
+  color:var(--bad);background:var(--bad-bg);border:1px solid rgba(140,48,48,.3);
+  padding:1px 7px;border-radius:999px;white-space:nowrap;
+}
+.gp-dot{position:absolute;top:50%;width:15px;height:15px;border-radius:50%;transform:translate(-50%,-50%);border:3px solid var(--surface);box-shadow:0 0 0 1px rgba(27,26,35,.12)}
+.gp-dot.exp{background:var(--accent)}
+.gp-dot.got{background:var(--bad)}
+.gp-row.ok .gp-rule{background:var(--blue-40)}
+
+.gp-note{
+  grid-column:2;margin:2px 0 0;font-size:.82rem;line-height:1.45;color:var(--bad);
+  font-weight:600;background:var(--bad-bg);border-left:3px solid var(--bad);
+  padding:8px 11px;border-radius:0 var(--r-s) var(--r-s) 0;
+}
+.gp-key{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;padding-top:11px;border-top:1px solid var(--line);font-size:.78rem;color:var(--muted);font-weight:600}
+.gp-key span{display:inline-flex;align-items:center;gap:6px}
+.gp-key i.k{width:13px;height:13px;border-radius:50%;flex:0 0 auto}
+.gp-key i.k.exp{background:var(--accent)}
+.gp-key i.k.got{background:var(--bad)}
+.gp-key i.k.bar{width:22px;height:10px;border-radius:999px;background:repeating-linear-gradient(115deg,rgba(140,48,48,.28) 0 6px,rgba(140,48,48,.11) 6px 12px);border:1px solid rgba(140,48,48,.35)}
+
+@media (max-width:640px){
+  .gp{padding:14px}
+  .gp-row{grid-template-columns:minmax(0,1fr);gap:6px}
+  .gp-head .gp-lbl{margin-bottom:2px}
+  .gp-note{grid-column:1}
+}
 
 /* Loyalty ladder */
 .ld-row{display:grid;grid-template-columns:minmax(0,1fr);border-left:5px solid var(--a);background:var(--surface);border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0 var(--r-m) var(--r-m) 0;margin:0 0 8px;width:var(--w);margin-left:auto;overflow:hidden}

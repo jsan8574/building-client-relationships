@@ -5,6 +5,8 @@
      1. drop  data/m3.js  next to data/m2.js, same shape
      2. add one entry to PROGRAM.courses below
      3. add the <script src="data/m3.js?v=N"> tag in index.html
+   The course currently ships STANDALONE: exactly one entry, no series UI is
+   rendered anywhere. Adding a second entry is what turns the series on.
    Nothing else changes. Navigation, progress, the sidebar, the knowledge check
    and the certificate all read from this manifest, and storage is namespaced
    per course id, so a new course starts with a clean drawer of its own.
@@ -14,20 +16,11 @@
 
   var PROGRAM = {
     id: 'client-relationship-leadership',
-    title: 'Client Relationship Leadership',
-    blurb: 'A manager-level programme on building, protecting and growing client relationships in revenue cycle management.',
+    title: 'Building Client Relationships',
+    blurb: 'A manager-level course on building, protecting and growing client relationships in revenue cycle management.',
     courses: [
       {
-        id: 'm1',
-        num: 1,
-        title: 'Effective Client Communication',
-        blurb: 'Managing perception, trust and conflict through intentional communication.',
-        state: 'external',
-        href: 'https://effective-client-communication-for-tls.revexpertone.com/'
-      },
-      {
-        id: 'm2',
-        num: 2,
+        id: 'm2',                      // storage namespace — internal, never shown; kept stable so existing learner progress survives
         title: 'Building Client Relationships',
         blurb: 'Understand the client at depth, build trust that survives a bad quarter, manage expectations, and move accounts up the loyalty ladder.',
         state: 'active',

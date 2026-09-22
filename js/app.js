@@ -88,7 +88,7 @@
 
     var h =
       '<div class="hero"><div class="hero-in">' +
-      '<p class="kicker">' + esc(PROGRAM.title) + ' · Module ' + COURSE.num + '</p>' +
+      '<p class="kicker">Self-paced e-learning · ' + esc(DATA.audience) + '</p>' +
       '<h1>' + esc(DATA.title) + '</h1>' +
       '<p>' + esc(DATA.blurb) + '</p>' +
       '<div class="chip-row" style="margin-top:18px">' +
@@ -105,7 +105,7 @@
 
       '<div class="card" id="startcard">' +
       '<p class="eyebrow">Before you start</p>' +
-      '<h2 style="margin-bottom:6px">Your name for the certificate</h2>' +
+      '<h2 style="margin-bottom:6px">What’s your name?</h2>' +
       '<p class="muted tiny" style="margin-bottom:16px">Stored only in this browser. Nothing is sent anywhere — there is no account and no server.</p>' +
       '<div class="namebox"><div class="f"><label class="fl" for="nm">Full name</label>' +
       '<input type="text" id="nm" value="' + esc(p.name || '') + '" placeholder="e.g. Alex Fernandez" autocomplete="name"></div>' +
@@ -136,20 +136,6 @@
       '<p class="muted tiny">Download a certificate with your name, total time invested and knowledge-check score — plus a PDF compiling every reflection and activity result.</p>' +
       '<div class="btn-row"><a class="btn sec" href="#/certificate">Go to certificate</a></div></div>' +
       '</div>' +
-
-      '<div class="card" style="margin-top:26px"><p class="eyebrow">Part of a series</p>' +
-      '<h3>' + esc(PROGRAM.title) + '</h3>' +
-      '<div class="grid g2" style="margin-top:12px">' +
-      PROGRAM.courses.map(function (c) {
-        if (c.state === 'active') {
-          return '<div class="modcard" style="cursor:default"><span class="n">Module ' + c.num + ' · You are here</span>' +
-            '<h3>' + esc(c.title) + '</h3><p>' + esc(c.blurb) + '</p></div>';
-        }
-        return '<a class="modcard" href="' + c.href + '" target="_blank" rel="noopener">' +
-          '<span class="n">Module ' + c.num + '</span><h3>' + esc(c.title) + '</h3>' +
-          '<p>' + esc(c.blurb) + '</p><span class="meta">Open in a new tab ↗</span></a>';
-      }).join('') +
-      '</div></div>' +
 
       '<div class="card" style="margin-top:26px"><p class="eyebrow">Your data</p>' +
       '<h3>Everything stays in this browser</h3>' +
@@ -301,7 +287,7 @@
 
   function init() {
     DATA = getCourseData();
-    document.title = DATA.title + ' — Module ' + COURSE.num;
+    document.title = DATA.title + ' — Self-Paced Course';
     document.getElementById('brandtitle').textContent = DATA.title;
     Store.startClock();
     Store.on('tick', function () { document.getElementById('tclock').textContent = Store.fmtTime(Store.elapsed()); });

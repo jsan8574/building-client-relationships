@@ -97,29 +97,56 @@
     });
   };
 
-  /* -------------------------------------------------- Expectation gap ---- */
+  /* -------------------------------------------------- Expectation gap ----
+     Read as a calendar: one shared day-scale, one row per month. The agreed day
+     is the blue marker, the day it actually landed is the red one, and the bar
+     between them IS the gap. The third row is the point of the whole diagram —
+     the client's expectation has quietly moved to the 7th, so the same two-day
+     slip now lands on the 9th.                                               */
   D.gap = function () {
-    /* viewBox coordinates; the SVG scales, the labels are real HTML below it */
+    var DAY0 = 5, DAYN = 10;                       // scale runs 5th -> 10th
+    function pos(d) { return ((d - DAY0) / (DAYN - DAY0)) * 100; }
+
+    var rows = [
+      { lbl: 'What you agreed',  sub: 'Reporting by the 5th', exp: 5, got: null, tone: 'ok' },
+      { lbl: 'Month 1',          sub: 'Two days late',        exp: 5, got: 7,    tone: 'warn' },
+      { lbl: 'Month 2',          sub: 'Two days late again',  exp: 5, got: 7,    tone: 'warn' },
+      { lbl: 'Month 3',          sub: 'Two days late \u2014 from the NEW baseline', exp: 7, got: 9, tone: 'bad',
+        note: 'The client has silently reset to the 7th. You are now late against a date you never agreed to.' }
+    ];
+
+    var scale = '';
+    for (var d = DAY0; d <= DAYN; d++) {
+      scale += '<span class="gp-tick" style="left:' + pos(d) + '%">' + d + '</span>';
+    }
+
     return '<div class="dg dg-gap">' +
-      '<svg viewBox="0 0 640 260" role="img" aria-label="Chart: the client’s expectation line stays flat while delivery drifts later each month, opening a widening expectation gap." preserveAspectRatio="xMidYMid meet">' +
-      '<defs><linearGradient id="gapfill" x1="0" y1="0" x2="0" y2="1">' +
-      '<stop offset="0%" stop-color="#8C3030" stop-opacity=".22"/><stop offset="100%" stop-color="#8C3030" stop-opacity=".03"/>' +
-      '</linearGradient></defs>' +
-      '<line x1="60" y1="215" x2="610" y2="215" stroke="#C8D1D1" stroke-width="1.5"/>' +
-      '<line x1="60" y1="30" x2="60" y2="215" stroke="#C8D1D1" stroke-width="1.5"/>' +
-      '<path d="M60 70 L610 70" stroke="#266F8B" stroke-width="3" stroke-linecap="round"/>' +
-      '<path d="M60 70 L243 70 L243 108 L426 108 L426 150 L610 150 Z M610 150 L610 70 Z" fill="url(#gapfill)"/>' +
-      '<path d="M60 70 L243 108 L426 150 L610 190" stroke="#8C3030" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="7 5"/>' +
-      '<circle cx="60" cy="70" r="5.5" fill="#266F8B"/><circle cx="243" cy="108" r="5.5" fill="#8C3030"/>' +
-      '<circle cx="426" cy="150" r="5.5" fill="#8C3030"/><circle cx="610" cy="190" r="5.5" fill="#8C3030"/>' +
-      '<text x="70" y="58" font-size="15" font-weight="700" fill="#266F8B">What the client expects — the 5th</text>' +
-      '<text x="250" y="212" font-size="14" fill="#8C3030" font-weight="600">7th</text>' +
-      '<text x="433" y="212" font-size="14" fill="#8C3030" font-weight="600">7th</text>' +
-      '<text x="560" y="212" font-size="14" fill="#8C3030" font-weight="600">9th</text>' +
-      '<text x="330" y="245" font-size="14" fill="#5A696B" text-anchor="middle">Month 1 → Month 4</text>' +
-      '<text x="12" y="125" font-size="13" fill="#5A696B" transform="rotate(-90 16 125)" text-anchor="middle">Later →</text>' +
-      '</svg>' +
-      '<p class="dg-cap"><b>The gap, not the result.</b> Delivery drifted two days, then two more. Performance never changed — the expectation did, and the client reset to it silently each time.</p>' +
+      '<div class="gp">' +
+        '<div class="gp-row gp-head"><div class="gp-lbl gp-cap-lbl">Day of the month</div>' +
+          '<div class="gp-track gp-scale">' + scale + '</div></div>' +
+        rows.map(function (r) {
+          var a = pos(r.exp), b = r.got === null ? null : pos(r.got);
+          return '<div class="gp-row ' + r.tone + '">' +
+            '<div class="gp-lbl"><b>' + r.lbl + '</b><span>' + r.sub + '</span></div>' +
+            '<div class="gp-track">' +
+              '<span class="gp-rule"></span>' +
+              (b === null ? '' :
+                '<span class="gp-bar" style="left:' + a + '%;width:' + (b - a) + '%"></span>' +
+                '<span class="gp-chip" style="left:' + ((a + b) / 2) + '%">+2 days</span>') +
+              '<span class="gp-dot exp" style="left:' + a + '%" title="Expected"></span>' +
+              (b === null ? '' : '<span class="gp-dot got" style="left:' + b + '%" title="Delivered"></span>') +
+            '</div>' +
+            (r.note ? '<p class="gp-note">' + r.note + '</p>' : '') +
+            '</div>';
+        }).join('') +
+        '<div class="gp-key">' +
+          '<span><i class="k exp"></i>Expected</span>' +
+          '<span><i class="k got"></i>Actually delivered</span>' +
+          '<span><i class="k bar"></i>The expectation gap</span>' +
+        '</div>' +
+      '</div>' +
+      '<p class="dg-cap"><b>Manage the gap, not the result.</b> Your delivery was two days late every single time \u2014 it never got worse. ' +
+      'What changed is the line you are being measured against, and the client moved it without telling you.</p>' +
       '</div>';
   };
 

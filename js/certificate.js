@@ -1,7 +1,7 @@
 /* =============================================================================
    certificate.js — canvas-drawn certificate + PNG download.
-   The certificate is scoped to THIS course (COURSE.num / DATA.title), so a
-   later module issues its own certificate with no changes here.
+   The certificate names the course it was earned on (DATA.title). It carries no
+   series or module numbering — this course stands alone.
    ========================================================================== */
 (function (global) {
   'use strict';
@@ -53,7 +53,7 @@
     /* band text */
     ctx.fillStyle = '#9AD3D9';
     ctx.font = '700 30px "Proxima Nova", Helvetica, Arial, sans-serif';
-    ctx.fillText(info.program.toUpperCase(), W / 2, 106);
+    ctx.fillText(info.eyebrow.toUpperCase(), W / 2, 106);
     ctx.fillStyle = '#FFFFFF';
     ctx.font = '700 58px "Proxima Nova", Helvetica, Arial, sans-serif';
     ctx.fillText('Certificate of Completion', W / 2, 176);
@@ -82,10 +82,6 @@
     ctx.fillStyle = '#5A696B';
     ctx.font = '400 32px "Proxima Nova", Helvetica, Arial, sans-serif';
     ctx.fillText('has successfully completed', W / 2, info.role ? 654 : 630);
-
-    ctx.fillStyle = '#194A5D';
-    ctx.font = '600 30px "Proxima Nova", Helvetica, Arial, sans-serif';
-    ctx.fillText('MODULE ' + info.moduleNum, W / 2, info.role ? 712 : 688);
 
     var tp = fitText(ctx, info.title, W - 360, 62, '700');
     ctx.fillStyle = '#1B1A23';
@@ -121,7 +117,7 @@
     ctx.fillText('Completed ' + info.date, W / 2, H - 158);
     ctx.fillStyle = '#7A8C8F';
     ctx.font = '400 23px "Proxima Nova", Helvetica, Arial, sans-serif';
-    ctx.fillText(info.program + ' · Self-paced e-learning', W / 2, H - 112);
+    ctx.fillText('Self-paced e-learning', W / 2, H - 112);
   }
 
   function render(host, ctxInfo) {
@@ -137,7 +133,7 @@
 
     host.innerHTML = '';
     host.appendChild(el('<div class="mod-head"><div class="mod-head-img" style="background-image:url(\'assets/closing.jpg\')">' +
-      '<div class="t"><div class="n">Module ' + COURSE.num + ' · Completion</div><h1>Your certificate</h1></div></div>' +
+      '<div class="t"><div class="n">Course completion</div><h1>Your certificate</h1></div></div>' +
       '<div class="mod-head-body"><p class="lede" style="margin:0">Canvas-drawn and downloadable as a PNG. Your answer export compiles every reflection and activity result into a single PDF.</p></div></div>'));
 
     var card = el('<div class="card"><p class="eyebrow">Requirements</p>' +
@@ -159,8 +155,8 @@
     }
 
     var info = {
-      program: PROGRAM.title,
-      moduleNum: COURSE.num,
+      eyebrow: DATA.audience,
+      audience: DATA.audience,
       title: DATA.title,
       name: p.name,
       role: p.role || '',
@@ -193,7 +189,7 @@
       paint();
       var a2 = document.createElement('a');
       a2.download = (info.name.replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-') || 'certificate') +
-        '-Module-' + COURSE.num + '-Certificate.png';
+        '-Certificate.png';
       a2.href = cv.toDataURL('image/png');
       document.body.appendChild(a2); a2.click(); document.body.removeChild(a2);
       App.toast('Certificate downloaded');

@@ -142,7 +142,7 @@
     doc.setFillColor(27, 26, 35); doc.rect(0, 0, W, 132, 'F');
     doc.setFillColor(51, 148, 186); doc.rect(0, 132, W, 5, 'F');
     doc.setTextColor('#9AD3D9'); doc.setFont('helvetica', 'bold'); doc.setFontSize(9);
-    doc.text(PROGRAM.title.toUpperCase() + '  ·  MODULE ' + COURSE.num, M, 48);
+    doc.text('SELF-PACED E-LEARNING  ·  ' + DATA.audience.toUpperCase(), M, 48);
     doc.setTextColor('#FFFFFF'); doc.setFontSize(20);
     doc.text('My Answers — ' + DATA.title, M, 76, { maxWidth: W - M * 2 });
     doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor('#CDDBE6');
@@ -183,7 +183,7 @@
   function fallbackText() {
     var sections = collect(), meta = sections.shift(), out = [];
     out.push('MY ANSWERS — ' + App.data().title);
-    out.push(PROGRAM.title + ' · Module ' + COURSE.num);
+    out.push('Self-paced e-learning');
     out.push(meta.name + (meta.role ? ' · ' + meta.role : ''));
     out.push('Time invested: ' + meta.time + ' · Exported ' + meta.date);
     out.push('');
@@ -197,7 +197,7 @@
   function filename(ext) {
     var p = Store.profile();
     return (p.name ? p.name.replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-') + '-' : '') +
-      'Module-' + COURSE.num + '-My-Answers.' + ext;
+      'My-Answers.' + ext;
   }
 
   function wire(btn, hint) {

@@ -1,4 +1,4 @@
-# Building Client Relationships — Module 2
+# Building Client Relationships
 
 **Live: <https://jsan8574.github.io/building-client-relationships/>**
 
@@ -7,8 +7,8 @@
 > audience ever needs restricting, the same folder has to move to a host with access
 > control (Netlify password, Cloudflare Access, or an LMS).
 
-A self-paced e-learning module for account managers and managers, rebuilt from the
-facilitator-led deck `Module 2 - Building Client Relationship for Managers Updated June 23.pptx`
+A **standalone** self-paced e-learning course for account managers and managers, rebuilt
+from the facilitator-led deck `Module 2 - Building Client Relationship for Managers Updated June 23.pptx`
 (25 slides, 20 carrying speaker notes).
 
 Plain HTML/CSS/JS. **No build step, no framework, no backend, no login.** Deploys to
@@ -21,8 +21,8 @@ GitHub Pages by pushing this folder as-is.
 Every CSS and JS tag in `index.html` carries `?v=N`:
 
 ```html
-<link rel="stylesheet" href="css/styles.css?v=6">
-<script src="js/app.js?v=6"></script>
+<link rel="stylesheet" href="css/styles.css?v=12">
+<script src="js/app.js?v=12"></script>
 ```
 
 **After editing any file in `css/` or `js/` or `data/`, increment every `?v=` in
@@ -30,8 +30,8 @@ Every CSS and JS tag in `index.html` carries `?v=N`:
 serve a stale file for ten minutes otherwise.
 
 ```bash
-# bump from 6 to 7
-sed -i '' 's/?v=6"/?v=7"/g' index.html
+# bump from 12 to 13
+sed -i '' 's/?v=12"/?v=13"/g' index.html
 ```
 
 If a fix "isn't showing up" while testing, **check the version the browser actually
@@ -143,13 +143,19 @@ between player and summary resets the confirmation so it has to be given again.
 
 ---
 
-## Adding Module 3 later
+## Adding a second course later
 
-The structure is already built for it. `js/course.js` holds the manifest:
+It ships standalone — no series branding, no module numbering, nothing that implies a
+Module 1 or 3 exists. The plumbing for a series is still there if you want it later.
+`js/course.js` holds the manifest:
 
 1. Drop `data/m3.js` next to `data/m2.js`, same shape.
-2. Add one entry to `PROGRAM.courses`.
+2. Add one entry to `PROGRAM.courses` (there is currently exactly one).
 3. Add `<script src="data/m3.js?v=N">` to `index.html` and bump `?v=`.
+
+Adding a second entry is what turns series navigation on; with one entry no series UI
+renders anywhere. Keep each entry's `id` stable — it is the localStorage namespace, so
+changing it silently resets every learner's progress for that course.
 
 Navigation, the sidebar, progress roll-up, the knowledge check and the certificate all
 read from the manifest. Storage is namespaced per course id, so a new module starts with
@@ -239,8 +245,9 @@ Then open `http://127.0.0.1:8777`. Any static server works; there is nothing to 
 > this same folder has to be hosted somewhere with access control instead.
 
 ```bash
+# already done — this is the record of how it was deployed
 gh repo create building-client-relationships --public --source=. --push
-gh api -X POST repos/:owner/building-client-relationships/pages \
+gh api -X POST repos/jsan8574/building-client-relationships/pages \
   -f 'source[branch]=main' -f 'source[path]=/'
 ```
 

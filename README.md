@@ -1,5 +1,12 @@
 # Building Client Relationships — Module 2
 
+**Live: <https://jsan8574.github.io/building-client-relationships/>**
+
+> This URL is **public**. GitHub Pages serves the site to anyone who has the link,
+> regardless of repository visibility or plan, and there is no password option. If the
+> audience ever needs restricting, the same folder has to move to a host with access
+> control (Netlify password, Cloudflare Access, or an LMS).
+
 A self-paced e-learning module for account managers and managers, rebuilt from the
 facilitator-led deck `Module 2 - Building Client Relationship for Managers Updated June 23.pptx`
 (25 slides, 20 carrying speaker notes).

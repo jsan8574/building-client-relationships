@@ -398,8 +398,12 @@ window.M2_DATA.modules.push(
       { k: 'lede', html: 'The expectation gap — the distance between what the client expects and what they get — is where relationships break down. Manage the gap, not just the result.' },
 
       { k: 'h', text: 'The expectation gap' },
+      { k: 'callout', tone: 'scenario', title: 'The scenario', html:
+        '<p>You manage a mid-size hospital account. The service agreement says one thing about reporting: <b>the monthly performance report reaches the client by the 5th.</b></p>' +
+        '<p>Over the next three months your team’s output does not change once. Every report is accurate, complete, and finished exactly two days after it is due — never worse, never better. Nobody misses a target. Nobody complains.</p>' +
+        '<p><b>Follow the three months on the line below, and watch what happens to the relationship anyway.</b></p>' },
       { k: 'diagram', name: 'gap' },
-      { k: 'callout', tone: 'warn', title: 'How a strong month becomes a trust problem', html: '<p>A client expects monthly reporting by the 5th. You deliver on the 7th — twice. They now expect the 7th. You deliver on the 9th.</p><p><b>You now have a trust problem, even though your actual performance metrics are strong.</b> Nothing about your delivery changed. Only the gap did.</p>' },
+      { k: 'callout', tone: 'warn', title: 'Why this is a trust problem, not a delivery problem', html: '<p>Nothing in your performance changed across those three months. <b>Two days late, every time.</b> If you were graded on delivery alone you would score identically in all three.</p><p>But by Month 3 the client believes you have slipped — because they are measuring you against the 7th, and you never knew the measurement had moved.</p>' },
       { k: 'callout', tone: 'key', title: 'The mistake underneath it', html: '<p>Managers manage the <b>outcome</b>, not the <b>expectation</b>. They focus hard on getting the metric right, and never set clear expectations about <i>when</i>, <i>how</i>, and <i>in what format</i> the client will hear about it.</p><p>Positive gaps build loyalty. Negative gaps destroy trust. Both are gaps — and both are managed the same way, in advance.</p>' },
 
       { k: 'h', text: 'The five pillars' },

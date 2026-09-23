@@ -21,8 +21,8 @@ GitHub Pages by pushing this folder as-is.
 Every CSS and JS tag in `index.html` carries `?v=N`:
 
 ```html
-<link rel="stylesheet" href="css/styles.css?v=12">
-<script src="js/app.js?v=12"></script>
+<link rel="stylesheet" href="css/styles.css?v=16">
+<script src="js/app.js?v=16"></script>
 ```
 
 **After editing any file in `css/` or `js/` or `data/`, increment every `?v=` in
@@ -30,8 +30,8 @@ Every CSS and JS tag in `index.html` carries `?v=N`:
 serve a stale file for ten minutes otherwise.
 
 ```bash
-# bump from 12 to 13
-sed -i '' 's/?v=12"/?v=13"/g' index.html
+# bump from 16 to 17
+sed -i '' 's/?v=16"/?v=17"/g' index.html
 ```
 
 If a fix "isn't showing up" while testing, **check the version the browser actually

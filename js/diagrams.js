@@ -98,55 +98,74 @@
   };
 
   /* -------------------------------------------------- Expectation gap ----
-     Read as a calendar: one shared day-scale, one row per month. The agreed day
-     is the blue marker, the day it actually landed is the red one, and the bar
-     between them IS the gap. The third row is the point of the whole diagram —
-     the client's expectation has quietly moved to the 7th, so the same two-day
-     slip now lands on the 9th.                                               */
+     ONE line: the days of the month. Three moments sit on it \u2014 the date that was
+     agreed, the date you kept delivering, and the date you delivered once the
+     client had quietly moved their expectation onto the second one.
+     The numbered notes below the line carry the words, so nothing has to be
+     crammed into the drawing and the whole thing survives a phone screen.    */
   D.gap = function () {
-    var DAY0 = 5, DAYN = 10;                       // scale runs 5th -> 10th
+    var DAY0 = 5, DAYN = 10;
     function pos(d) { return ((d - DAY0) / (DAYN - DAY0)) * 100; }
 
-    var rows = [
-      { lbl: 'What you agreed',  sub: 'Reporting by the 5th', exp: 5, got: null, tone: 'ok' },
-      { lbl: 'Month 1',          sub: 'Two days late',        exp: 5, got: 7,    tone: 'warn' },
-      { lbl: 'Month 2',          sub: 'Two days late again',  exp: 5, got: 7,    tone: 'warn' },
-      { lbl: 'Month 3',          sub: 'Two days late \u2014 from the NEW baseline', exp: 7, got: 9, tone: 'bad',
-        note: 'The client has silently reset to the 7th. You are now late against a date you never agreed to.' }
+    /* two captions per mark: the full one, and a short one that survives 375px
+       where the long labels would collide into each other on the line.        */
+    var marks = [
+      { n: 1, day: 5, kind: 'exp',  cap: 'Agreed \u2014 the 5th',      brief: '5th', al: 'start'  },
+      { n: 2, day: 7, kind: 'both', cap: 'Months 1 & 2 \u2014 the 7th', brief: '7th', al: 'center' },
+      { n: 3, day: 9, kind: 'got',  cap: 'Month 3 \u2014 the 9th',      brief: '9th', al: 'end'    }
     ];
 
-    var scale = '';
+    var notes = [
+      { n: 1, t: 'The only date anyone agreed to',
+        d: 'Your contract says the report reaches the client <b>by the 5th</b>. Nothing else was ever committed to, in writing or otherwise.' },
+      { n: 2, t: 'Months 1 and 2 \u2014 delivered on the 7th, twice',
+        d: 'Two days late, and the client says nothing. <b>That silence is not acceptance \u2014 it is a reset.</b> The 7th is now the date they expect.' },
+      { n: 3, t: 'Month 3 \u2014 delivered on the 9th',
+        d: 'Still exactly two days late. Your team did not slip once. But you are now late against <b>the 7th</b> \u2014 a date you never agreed to and were never told about.' }
+    ];
+
+    var ticks = '';
     for (var d = DAY0; d <= DAYN; d++) {
-      scale += '<span class="gp-tick" style="left:' + pos(d) + '%">' + d + '</span>';
+      ticks += '<span class="eg-tick" style="left:' + pos(d) + '%">' + d + '</span>';
     }
 
-    return '<div class="dg dg-gap">' +
-      '<div class="gp">' +
-        '<div class="gp-row gp-head"><div class="gp-lbl gp-cap-lbl">Day of the month</div>' +
-          '<div class="gp-track gp-scale">' + scale + '</div></div>' +
-        rows.map(function (r) {
-          var a = pos(r.exp), b = r.got === null ? null : pos(r.got);
-          return '<div class="gp-row ' + r.tone + '">' +
-            '<div class="gp-lbl"><b>' + r.lbl + '</b><span>' + r.sub + '</span></div>' +
-            '<div class="gp-track">' +
-              '<span class="gp-rule"></span>' +
-              (b === null ? '' :
-                '<span class="gp-bar" style="left:' + a + '%;width:' + (b - a) + '%"></span>' +
-                '<span class="gp-chip" style="left:' + ((a + b) / 2) + '%">+2 days</span>') +
-              '<span class="gp-dot exp" style="left:' + a + '%" title="Expected"></span>' +
-              (b === null ? '' : '<span class="gp-dot got" style="left:' + b + '%" title="Delivered"></span>') +
-            '</div>' +
-            (r.note ? '<p class="gp-note">' + r.note + '</p>' : '') +
-            '</div>';
-        }).join('') +
-        '<div class="gp-key">' +
-          '<span><i class="k exp"></i>Expected</span>' +
-          '<span><i class="k got"></i>Actually delivered</span>' +
-          '<span><i class="k bar"></i>The expectation gap</span>' +
+    return '<div class="dg dg-gap"><div class="eg">' +
+
+      '<div class="eg-head"><span class="eg-axis-lbl">Day of the month</span></div>' +
+      '<div class="eg-track">' +
+        '<div class="eg-days">' + ticks + '</div>' +
+
+        /* the single line */
+        '<div class="eg-line">' +
+          '<span class="eg-rule"></span>' +
+          marks.map(function (m) {
+            return '<span class="eg-pin ' + m.kind + '" style="left:' + pos(m.day) + '%">' +
+                   '<i>' + m.n + '</i></span>' +
+                   '<span class="eg-cap ' + m.kind + ' al-' + m.al + '" style="left:' + pos(m.day) + '%">' +
+                   '<b class="cap-full">' + m.cap + '</b><b class="cap-brief">' + m.brief + '</b></span>';
+          }).join('') +
+        '</div>' +
+
+        /* the client's adjustment, drawn underneath the same line */
+        '<div class="eg-drift">' +
+          '<span class="eg-arrow" style="left:' + pos(5) + '%;width:' + (pos(7) - pos(5)) + '%"></span>' +
+          '<span class="eg-drift-lbl">The client\u2019s expectation quietly slides to the 7th</span>' +
         '</div>' +
       '</div>' +
+
+      '<ol class="eg-notes">' + notes.map(function (n) {
+        return '<li><span class="eg-num">' + n.n + '</span><div><b>' + n.t + '</b><p>' + n.d + '</p></div></li>';
+      }).join('') + '</ol>' +
+
+      '<div class="eg-key">' +
+        '<span><i class="k exp"></i>The date that was agreed</span>' +
+        '<span><i class="k got"></i>The date it actually landed</span>' +
+        '<span><i class="k drift"></i>Where the client moved the line to</span>' +
+      '</div>' +
+
+      '</div>' +
       '<p class="dg-cap"><b>Manage the gap, not the result.</b> Your delivery was two days late every single time \u2014 it never got worse. ' +
-      'What changed is the line you are being measured against, and the client moved it without telling you.</p>' +
+      'What moved is the line you are measured against, and the client moved it without telling you.</p>' +
       '</div>';
   };
 
